@@ -1,0 +1,94 @@
+Jessica Neves
+CSC 201
+5/3/2016
+
+Program 5 - Roam and Plunder
+
+Variables:
+Treasure Class: All variables in this class are local to the Treasure Class
+	self.name - A string type, giving the name of the item
+	self.value - An integer type, giving the monetary value of the item
+	self.type_treasure - A string type used to distinguish between different treasures (i.e. food, weapons, armors)
+	self.description - A string type used to give a brief description of the item
+	pos_x, pos_y - initially None type, but take integer types to give coordinates
+	self.position - takes pos_x and pos_y to store coordinates as a tuple
+	self.carry - Boolean, False if not being carried by the player
+	self.found - Boolean, False if the player is not occupying the same space as the item
+Weapon Class: All variables in this class are local to the Weapon class and inherits from the Treasure superclass.
+	self.name, self.value, self.description are inherited
+	self.damage - An integer value, larger for better weapons. Added to player's attack
+	self.wielding - A Boolean, False if the player is not wielding the weapon
+	self.type_treasure - A string type "Weapon"
+
+Armor Class: All variables in this class are local to the Armor class and inherits from the Treasure superclass.
+	self.defense - An integer value, larger for better armor. Added to player's defense
+	self.wearing - A Boolean, False if the player is not wearing the armor
+	self.type_treasure - A string type "Armor"
+
+Food Class: All variables in this class are local to the Food class and inherits from the Treasure superclass.
+	self.nutrition - An integer value, larger for better food items. Gets added to players hp when item is eaten
+	self.eaten - A Boolean, False if the food item has not been consumed yet
+	self.type_treasure - A string type "Food"
+
+Gold class: All variables in this class are local to the Gold class and inherits from the Treasure superclass.
+	self.value - An integer value of 1
+	self.type_treasure - A string type "Gold"
+	self.quantity - An integer value for different amounts of gold pieces
+
+Player Class: All variables in this class are local to the Player class
+	self.name - A string type, used to assign the player's name
+	self.experience - An integer type, set to 0
+	self.health - An integer type, used to determine player's current health, initially 10
+	self.max_health - An integer type, used to determine player's maximum health, initially 10
+	self.pos_x, self.pos_y - Integer types, used to create players coordinates
+	self.position - A tuple, contains self.pos_x, and self.pos_y
+	self.defense - An integer, initially 0, defense added from armors worn
+	self.attack - An integer, initially 0, damage added from weapon wielded
+	self.player_inventory - A list type, initially empty, used to store items the player picks up
+	self.equip_list - A list type, initially empty, stores 1 weapon and 1 armor the player is using
+	self.gold_amnt - An integer type, initially 0. Quantity added from gold picked up
+
+Level Class: All variables local to the Level class
+	self.level - A list type, used to nest lists for creating a grid
+	self.width - An integer type, set to 40 (max)
+	self.height - An integer type, set to 24 (max)
+	self.list_treasures - A list type, used to store the treasure items present in the current level
+	self.treasure_locations - A list type, used to store the locations of treasure items in the level
+	self.stairs_up - A list type, used to store the location of the stairs to the next level
+	self.stairs_down - A list type, used to store the location of the stairs to the previous level
+	self.foods - A list type, used to store food items to be randomly chosen from for each level
+	self.weapons - A list type, used to store food itmes to be randomly chosen from for each level
+	self.armors - A list type, used to store food items to be randomly chosen from for each level
+	self.gold - A list type, used to store gold items to be randomly chosen from for each level
+	self.player_x - A list type, stores the player's current x coordinate
+	self.player_y - A list type, stores the player's current y coordinate
+
+	From the main() function:
+	Commands - A dictionary of keys and corresponding functions
+	myWorld - A list type, initially empty. Stores new levels
+	run - Stores a string "on" to keep the game running
+	player_action - Stores a string that is compared to the command list
+
+The goal of this assignment was to practice working with an object oriented system. We were tasked with designing a Role Playing Game, complete with a Player class, Treasure class, and Level class at minimum. We started building the game with a Treasure class. The Treasure class needed to have items of 4 different types: Food, Armor, Weapons, and Gold. I chose to make my program with a parent class Treasure and sublcasses of the four kinds, each with it's respective type hard-coded in. It was straight forward enough. I gave the parent class __init__ attributes such as a name, a value, a description, an x and y coordinate, and two boolean values for the item being carried or found. Each of the subclasses inherited these attributes, however, I could reassign them as needed. Additionally, Food items were given a nutrition value which would be added to the player's health when the item was consumed, Armor items were given a defense value which would be added to the player's own defense value if the armor was worn, Weapons were given a damage value which would be added to the player's attack value if the weapon was wielded, and Gold items were given a quantity which would be added to any other gold value the player picked up.
+
+The Treasure class also needed appropriate methods (getters and setters). Most of the setters only applied to Boolean values that were likely to change. Other variables that were strings or integers I inteneded to keep non-changing for the duration of the program as they would be instantiated and appended to a list.
+
+Next we moved to the Character class. For the creation of the character I defined the standard variables for a player character (name, experience, health, x and y coordinates, inventory). For this program, additional variables we needed were a defense and attack which would be figured from the weapon or armor the player equipped. As such, I decided to make a list to hold only two items: 1 weapon and 1 armor as the player could only have one of either type equipped at a time. I also chose to keep a record of the gold the player picked up as that amount needed to be printed as part of the player's inventory rather than a separate wallet object.
+
+The Character class included the typical getters and setters, particular for changing the character's position in the world or adding the defense and damage values. Additional methods included: look_at, move_to, inventory, pickup, equip, remove, unwield, drop. These methods were very interesting to make, but took a long time as there were a lot of decision structures I built into them. 
+
+look_at() for example, compared the player's current health to their max health. Based on how the two values compared, a string indicating the player's health was saved. Then the decision structure looked at the equip_list. If there were no items present, a string stating that the player was not wielding a weapon or wearing armor was stored. Otherwise, one or both positions were checked for items of type Armor or type Weapon and if they were found, corresponding statements were saved for those too. At last at the end, a statement was returned listing all the concatenated strings.
+
+Inventory() had to return an ordered list of its current elements.
+pickup() had to append items to the player's inventory if the player chose to pickup items they found. If the item was a gold type, the amount had to be added to the same list index as any gold the player already had.
+equip() was a complicated decision structure that was supposed to equip either the first weapon or armor in the player's inventory. In making this decision structure, I had to take into account if the player already had items equipped and compared this to the first item in the list. If the first item was the same as an already equipped item it would automatically go to the next item in the list until it either reached the end or found something that was not yet equipped.
+remove() applied to removing armor, which would also remove it from the player's equip_list.
+unwield() worked the same as remove() except for Weapons.
+eat() applied to eating Food items. The player could attempt to eat items, but only food items would be removed from the inventory and nutrition used to restore hp. As a penalty for trying to increase the max amount of health possible by eating more food when the player was already full, 1 hp was deducted.
+drop() looked at what type of treasure the player was attempting to drop. If it was a weapon or armor it could not be equipped if they tried to drop it. Otherwise, all items not in use would be dropped at the player's current location and removed from the player inventory.
+
+Finally, we reached the Level class. This was the most difficult class to build. I started with a list called self.level. I used a set height and width (at the maximum sizes asked for). The idea to build the grid was to create nested lists using nested for loops. The method create_level(), iterates for the number of rows and creates an empty list for each one. Within each newly created list, a second for loop appended for a number of iterations equal to the width. When starting to build this I used numbers to make sure it worked properly. I recalled our formatting basics that we learned at the beginning of the course for building hollow squares to create the top, bottom, and side borders. Once all the numbers were in place, I replaced the outer border with '#' and the inner area with '.'. In the display_level() method, I used join to eliminate the commas separating all the values in each row of lists. The level_treasures() method was where I stored all my treasure items. place_player() generated a random position for the player icon to appear at. move_player() and replace_player() were meant to change the symbols on the grid accordingly based on where the player moved to. place_treasure() was used to randomly place treasure items around the map. stair_up() and stair_down() were meant to randomly place stairs in the levels.
+
+While there were all the classes outlined in the handout, I chose to attempt to put everything together in a main() function for neatness. I stored all my commands in a dictionary. An empty list called myWorld was meant to store all the levels that would be created. Here was where the program would accept user input and run within a while loop. When the player entered a command it would be compared to the keys in the commands dictionary and then further broken down to call the specified method.
+
+Overall, this was the most challenging program yet. While I have not finished it at this point in time, I did learn a lot along the way. One of the biggest challenges was formatting the grid, nesting lists and for loops. Another challenge was the dictionary. I discovered the hard way that when building a dictionary, if a key's corresponding value is a call to a method, the program will read within the dictionary and run it without a call. It becomes important to store the function objects, not the function calls. Along the way I learned to understand how functions are meant to relate to eachother from different classes. I also had a number of NameErrors relating to 'self'. Keeping all of the concepts straight becomes a challenge. At the final stages before submitting the code I was attempting to handle an error with how the player moves and relating that to the player icon on the map. After looking through my code I have realized that my character class places the player at (0,0) which is in the upper left hand corner of the map. Within the Level class, the player icon is randomly placed on an empty space within the grid. Getting the two to match up was proving to be a challenge. For now, I understand I have come a long way with this project. Completing it may become a task for a rainy day somewhere down the road.
